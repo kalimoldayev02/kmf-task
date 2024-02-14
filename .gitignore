@@ -1,5 +1,5 @@
 .env
 .idea
 .code
-/configs/local.yml
-configs/local.yaml
+/configs/*
+!/configs/example.json

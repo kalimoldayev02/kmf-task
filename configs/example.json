@@ -1,0 +1,16 @@
+{
+    "database": {
+        "driver": "",
+        "host": "",
+        "port": 0,
+        "db_name": "",
+        "username": "",
+        "password": ""
+    },
+    "http_server": {
+        "port": 0
+    },
+    "service_hosts": {
+        "nationalbank": ""
+    }
+}
