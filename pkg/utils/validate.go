@@ -11,7 +11,7 @@ func NewValidator() *validator.Validate {
 
 	_ = validate.RegisterValidation("currency_date", func(fl validator.FieldLevel) bool {
 		date := fl.Field().String()
-		// Format for currency date
+		// валидация для currency date
 		match, _ := regexp.MatchString(`^\d{2}-\d{2}-\d{4}$`, date)
 		return match
 	})

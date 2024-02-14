@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Not found Route
+// роут для 404
 func NotFoundRoute(r *mux.Router) {
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)

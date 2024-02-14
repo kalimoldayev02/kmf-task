@@ -5,8 +5,14 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/joho/godotenv"
+)
+
+var (
+	instance *Config
+	once     sync.Once
 )
 
 type Database struct {
@@ -32,7 +38,17 @@ type Config struct {
 	ServiceHosts ServiceHosts `json:"service_hosts"`
 }
 
-func LoadConfig() *Config {
+func GetInstance() *Config {
+	if instance == nil {
+		once.Do(func() { // принимает в аргумент функцию, которая отработает один раз за вызов
+			instance = loadConfig()
+		})
+	}
+
+	return instance
+}
+
+func loadConfig() *Config {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("error load .env file: %s", err)
 	}

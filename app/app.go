@@ -21,24 +21,24 @@ func Run(c *config.Config) {
 		log.Printf("error on init db: %s", err.Error())
 	}
 
-	// Repository
+	// repository
 	repository := repository.NewRepository(db)
 
-	// Service
+	// service
 	service := service.NewService(repository)
 
-	// Validator
+	// validator
 	validator := utils.NewValidator()
 
-	// Controller
+	// controller
 	controller := controller.NewController(service, validator)
 
-	// Router
+	// router
 	router := route.NewRouter()
 	route.PublicRoutes(router, controller)
 	route.NotFoundRoute(router)
 
-	http.ListenAndServe(fmt.Sprintf(":%d", c.HttpServer.Port), router)
+	log.Println(http.ListenAndServe(fmt.Sprintf(":%d", c.HttpServer.Port), router))
 }
 
 func initDB(c *config.Config) (*sql.DB, error) {
@@ -46,9 +46,8 @@ func initDB(c *config.Config) (*sql.DB, error) {
 	cfg := c.Database
 
 	switch cfg.Driver {
-	case "mssql":
-		dsn = fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s;port=%d", cfg.Host, cfg.Username, cfg.Password, cfg.DBName, cfg.Port)
-
+	case "postgres":
+		dsn = fmt.Sprintf("host=%s user=%s dbname=%s password=%s sslmode=disable", cfg.Host, cfg.Username, cfg.DBName, cfg.Password)
 	}
 
 	return sql.Open(cfg.Driver, dsn)

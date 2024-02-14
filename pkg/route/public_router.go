@@ -8,7 +8,7 @@ import (
 )
 
 func PublicRoutes(r *mux.Router, c *controller.Controller) {
-	// Currency Routes
+	// сurrency Роуты
 	currencyApi := r.PathPrefix("/currency").Subrouter()
 	currencyApi.HandleFunc("/save/{date}", c.SaveCurrency).Methods(http.MethodGet)
 }

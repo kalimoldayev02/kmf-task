@@ -10,9 +10,9 @@ type Controller struct {
 	Validator *validator.Validate
 }
 
-func NewController(service *service.Service, validator *validator.Validate) *Controller {
+func NewController(s *service.Service, v *validator.Validate) *Controller {
 	return &Controller{
-		Service:   service,
-		Validator: validator,
+		Service:   s,
+		Validator: v,
 	}
 }

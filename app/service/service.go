@@ -1,6 +1,8 @@
 package service
 
-import "github.com/kalimoldayev02/kmf-task/app/repository"
+import (
+	"github.com/kalimoldayev02/kmf-task/app/repository"
+)
 
 type Currency interface {
 	Save(date string) bool

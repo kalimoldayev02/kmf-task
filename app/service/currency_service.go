@@ -31,7 +31,7 @@ func (s *CurrencyService) Save(date string) bool {
 		return false
 	}
 
-	config := config.LoadConfig()
+	config := config.GetInstance()
 
 	baseUrl := fmt.Sprintf("https://%s/rss/get_rates.cfm", config.ServiceHosts.NotionalBank)
 	query := url.Values{}
