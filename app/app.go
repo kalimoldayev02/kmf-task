@@ -48,7 +48,21 @@ func initDB(c *config.Config) (*sql.DB, error) {
 	switch cfg.Driver {
 	case "postgres":
 		dsn = fmt.Sprintf("host=%s user=%s dbname=%s password=%s sslmode=disable", cfg.Host, cfg.Username, cfg.DBName, cfg.Password)
+	default:
+		return nil, fmt.Errorf("undefined database driver: %s", cfg.Driver)
 	}
 
-	return sql.Open(cfg.Driver, dsn)
+	db, err := sql.Open(cfg.Driver, dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, err
+	}
+
+	defer db.Close()
+
+	return db, nil
 }

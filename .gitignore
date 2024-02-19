@@ -3,3 +3,4 @@
 .code
 /configs/*
 !/configs/example.json
+docker/data

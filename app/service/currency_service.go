@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io"
 	"log"
@@ -16,6 +17,16 @@ var layout = "02-01-2006"
 
 type CurrencyService struct {
 	repository repository.Currency
+}
+
+type RatesRequest struct {
+	Currency []struct {
+		FullName    string `xml:"fullname"`
+		Title       string `xml:"title"`
+		Description string `xml:"description"`
+		Quant       int    `xml:"quant"`
+		Index       string `xml:"index"`
+	} `xml:"item"`
 }
 
 func NewAuthSerive(r repository.Currency) *CurrencyService {
@@ -56,7 +67,16 @@ func (s *CurrencyService) Save(date string) bool {
 		return false
 	}
 
-	fmt.Println(string(body))
+	rates := new(RatesRequest)
+	if err := xml.Unmarshal([]byte(body), rates); err != nil {
+		log.Fatalf("error read from notional bank: %s", err)
+		return false
+	}
+
+	for _, currency := range rates.Currency {
+		fmt.Printf("Fullname: %s\n", currency.FullName)
+		fmt.Printf("---\n")
+	}
 
 	return false
 }

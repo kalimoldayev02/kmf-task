@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: /docker/Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - kmf
+
+  db:
+    image: postgres:14-alpine
+    container_name: db
+    restart: always
+    ports:
+      - "25432:5432"
+    environment:
+      - POSTGRES_DB=kmf
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./docker/data:/var/lib/postgresql/data
+    networks:
+      - kmf
+networks:
+  kmf:
