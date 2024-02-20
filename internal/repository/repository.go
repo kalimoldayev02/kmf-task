@@ -9,12 +9,12 @@ const (
 type Currency interface {
 }
 
-type Respository struct {
+type Repository struct {
 	Currency
 }
 
-func NewRepository(db *sql.DB) *Respository {
-	return &Respository{
+func NewRepository(db *sql.DB) *Repository {
+	return &Repository{
 		Currency: NewCurrencyRepository(db),
 	}
 }

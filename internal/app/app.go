@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kalimoldayev02/kmf-task/app/controller"
-	"github.com/kalimoldayev02/kmf-task/app/repository"
-	"github.com/kalimoldayev02/kmf-task/app/service"
+	"github.com/kalimoldayev02/kmf-task/internal/controller"
+	api "github.com/kalimoldayev02/kmf-task/internal/controller/delivery/http"
+	"github.com/kalimoldayev02/kmf-task/internal/repository"
+	"github.com/kalimoldayev02/kmf-task/internal/service"
 	"github.com/kalimoldayev02/kmf-task/pkg/config"
 	"github.com/kalimoldayev02/kmf-task/pkg/route"
 	"github.com/kalimoldayev02/kmf-task/pkg/utils"
@@ -34,7 +35,7 @@ func Run(c *config.Config) {
 	controller := controller.NewController(service, validator)
 
 	// router
-	router := route.NewRouter()
+	router := api.NewRouter()
 	route.PublicRoutes(router, controller)
 	route.NotFoundRoute(router)
 

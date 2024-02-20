@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -38,37 +39,27 @@ type Config struct {
 	ServiceHosts ServiceHosts `json:"service_hosts"`
 }
 
-func GetInstance() *Config {
-	if instance == nil {
-		once.Do(func() { // принимает в аргумент функцию, которая отработает один раз за вызов
-			instance = loadConfig()
-		})
-	}
-
-	return instance
-}
-
-func loadConfig() *Config {
+func NewCoifig() (*Config, error) {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("error load .env file: %s", err)
 	}
 
 	configFile := os.Getenv("CONFIG_FILE")
 	if configFile == "" {
-		log.Fatalf("CONFIG_FILE is not set in .env")
+		return nil, fmt.Errorf("CONFIG_FILE is not set in .env")
 	}
 
 	configPath := filepath.Join("configs", configFile)
 
 	configContent, err := os.ReadFile(configPath)
 	if err != nil {
-		log.Fatalf("can not read config: %s", err)
+		return nil, fmt.Errorf("can not read config: %s", err)
 	}
 
-	var config Config
+	config := &Config{}
 	if err := json.Unmarshal(configContent, &config); err != nil {
-		log.Fatalf("error decodingJSON : %s", err)
+		return nil, fmt.Errorf("error decoding JSON: %s", err)
 	}
 
-	return &config
+	return config, nil
 }

@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/kalimoldayev02/kmf-task/app/repository"
+	"github.com/kalimoldayev02/kmf-task/internal/repository"
 	"github.com/kalimoldayev02/kmf-task/pkg/config"
 )
 
@@ -29,7 +29,7 @@ type RatesRequest struct {
 	} `xml:"item"`
 }
 
-func NewAuthSerive(r repository.Currency) *CurrencyService {
+func NewAuthService(r repository.Currency) *CurrencyService {
 	return &CurrencyService{
 		repository: r,
 	}

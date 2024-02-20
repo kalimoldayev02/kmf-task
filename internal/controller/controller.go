@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/go-playground/validator/v10"
-	"github.com/kalimoldayev02/kmf-task/app/service"
+	"github.com/kalimoldayev02/kmf-task/internal/service"
 )
 
 type Controller struct {

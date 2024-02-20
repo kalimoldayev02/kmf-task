@@ -13,10 +13,10 @@ func (c *Controller) SaveCurrency(w http.ResponseWriter, r *http.Request) {
 	date := vars["date"]
 
 	if err := c.Validator.Var(date, "required,currency_date"); err != nil {
-		reponseField := map[string]string{}
-		reponseField["message"] = "invalid format date"
+		responseField := map[string]string{}
+		responseField["message"] = "invalid format date"
 
-		http.Error(w, utils.ToJson(reponseField), http.StatusBadRequest)
+		http.Error(w, utils.ToJson(responseField), http.StatusBadRequest)
 		return
 	}
 
