@@ -6,18 +6,16 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kalimoldayev02/kmf-task/internal/controller"
-	api "github.com/kalimoldayev02/kmf-task/internal/controller/delivery/http"
+	handler "github.com/kalimoldayev02/kmf-task/internal/delivery/http"
 	"github.com/kalimoldayev02/kmf-task/internal/repository"
 	"github.com/kalimoldayev02/kmf-task/internal/service"
 	"github.com/kalimoldayev02/kmf-task/pkg/config"
-	"github.com/kalimoldayev02/kmf-task/pkg/route"
 	"github.com/kalimoldayev02/kmf-task/pkg/utils"
 )
 
-func Run(c *config.Config) {
+func Run(cfg *config.Config) {
 	// DB
-	db, err := initDB(c)
+	db, err := initDB(cfg)
 	if err != nil {
 		log.Printf("error on init db: %s", err.Error())
 	}
@@ -31,15 +29,11 @@ func Run(c *config.Config) {
 	// validator
 	validator := utils.NewValidator()
 
-	// controller
-	controller := controller.NewController(service, validator)
+	// handler
+	handler := handler.NewHandler(service, validator)
+	handler.PublicHandler()
 
-	// router
-	router := api.NewRouter()
-	route.PublicRoutes(router, controller)
-	route.NotFoundRoute(router)
-
-	log.Println(http.ListenAndServe(fmt.Sprintf(":%d", c.HttpServer.Port), router))
+	log.Println(http.ListenAndServe(fmt.Sprintf(":%d", cfg.HttpServer.Port), handler.GetRouter()))
 }
 
 func initDB(c *config.Config) (*sql.DB, error) {

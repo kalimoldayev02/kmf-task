@@ -41,8 +41,11 @@ func (s *CurrencyService) Save(date string) bool {
 		log.Printf("error parsing date: %s", err)
 		return false
 	}
-
-	config := config.GetInstance()
+	config, err := config.NewCoifig()
+	if err != nil {
+		log.Fatalf("error: %s", err)
+		return false
+	}
 
 	baseUrl := fmt.Sprintf("https://%s/rss/get_rates.cfm", config.ServiceHosts.NotionalBank)
 	query := url.Values{}
