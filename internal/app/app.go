@@ -32,6 +32,7 @@ func Run(cfg *config.Config) {
 	// handler
 	handler := handler.NewHandler(service, validator)
 	handler.PublicHandler()
+	handler.NotFoundRoute()
 
 	log.Println(http.ListenAndServe(fmt.Sprintf(":%d", cfg.HttpServer.Port), handler.GetRouter()))
 }
