@@ -82,3 +82,13 @@ func (s *CurrencyService) Create(date string) bool {
 
 	return true
 }
+
+func (s *CurrencyService) GetByDate(date string) ([]dto.ResponseCurrencyDTO, error) {
+
+	return nil, nil
+}
+
+func (s *CurrencyService) GetByDateAndCode(date string, code string) ([]dto.ResponseCurrencyDTO, error) {
+
+	return nil, nil
+}

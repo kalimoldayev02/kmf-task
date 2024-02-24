@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/kalimoldayev02/kmf-task/internal/dto"
+	"github.com/kalimoldayev02/kmf-task/internal/entity"
 )
 
 type CurrencyRepository struct {
@@ -26,4 +27,14 @@ func (r *CurrencyRepository) CreateCurrency(currency dto.CreateCurrencDTO) (uint
 	}
 
 	return id, nil
+}
+
+func (r *CurrencyRepository) GetByDate(date string) ([]entity.Currency, error) {
+
+	return nil, nil
+}
+
+func (r *CurrencyRepository) GetByDateAndCode(date string, code string) ([]entity.Currency, error) {
+
+	return nil, nil
 }

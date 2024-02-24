@@ -16,3 +16,10 @@ type CreateCurrencDTO struct {
 	Value string
 	Date  time.Time
 }
+
+type ResponseCurrencyDTO struct {
+	ID    uint   `json:"id"`
+	Code  string `json:"code"`
+	Value string `json:"value"`
+	Date  string `json:"date"`
+}

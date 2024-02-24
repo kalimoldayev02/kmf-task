@@ -10,6 +10,8 @@ import (
 
 func newCurrencyHandler(r *mux.Router, h *Handler) {
 	r.HandleFunc("/save/{date}", h.createCurrency).Methods(http.MethodGet)
+	r.HandleFunc("/{date}", h.getCurrencyByDate).Methods(http.MethodGet)
+	r.HandleFunc("/{date}/{code}", h.getCurrencyByDate).Methods(http.MethodGet)
 }
 
 func (h *Handler) createCurrency(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +37,42 @@ func (h *Handler) createCurrency(w http.ResponseWriter, r *http.Request) {
 
 	if !result {
 		http.Error(w, string(response), http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
+}
+
+func (h *Handler) getCurrencyByDate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	date := vars["date"]
+
+	if err := h.validator.Var(date, "required,currency_date"); err != nil {
+		responseField := map[string]string{}
+		responseField["message"] = "invalid format date"
+
+		http.Error(w, utils.ToJson(responseField), http.StatusBadRequest)
+		return
+	}
+
+	var data interface{}
+	var err error
+	if code, isExist := vars["code"]; isExist {
+		data, err = h.service.Currency.GetByDateAndCode(date, code)
+	} else {
+		data, err = h.service.Currency.GetByDate(date)
+	}
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response, err := json.Marshal(data)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
