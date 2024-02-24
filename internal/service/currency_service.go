@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/kalimoldayev02/kmf-task/internal/dto"
+	"github.com/kalimoldayev02/kmf-task/internal/mapper"
 	"github.com/kalimoldayev02/kmf-task/internal/repository"
 	"github.com/kalimoldayev02/kmf-task/pkg/config"
 )
@@ -19,23 +21,17 @@ type CurrencyService struct {
 	repository repository.Currency
 }
 
-type RatesRequest struct {
-	Currency []struct {
-		FullName    string `xml:"fullname"`
-		Title       string `xml:"title"`
-		Description string `xml:"description"`
-		Quant       int    `xml:"quant"`
-		Index       string `xml:"index"`
-	} `xml:"item"`
+type RateRequest struct {
+	Currency []dto.RequestCurrencyDTO `xml:"item"`
 }
 
-func NewAuthService(r repository.Currency) *CurrencyService {
+func newCurrencyService(r repository.Currency) *CurrencyService {
 	return &CurrencyService{
 		repository: r,
 	}
 }
 
-func (s *CurrencyService) Save(date string) bool {
+func (s *CurrencyService) Create(date string) bool {
 	parsedDate, err := time.Parse(layout, date)
 	if err != nil {
 		log.Printf("error parsing date: %s", err)
@@ -70,16 +66,19 @@ func (s *CurrencyService) Save(date string) bool {
 		return false
 	}
 
-	rates := new(RatesRequest)
+	rates := new(RateRequest)
 	if err := xml.Unmarshal([]byte(body), rates); err != nil {
 		log.Fatalf("error read from notional bank: %s", err)
 		return false
 	}
 
 	for _, currency := range rates.Currency {
-		fmt.Printf("Fullname: %s\n", currency.FullName)
-		fmt.Printf("---\n")
+		go func(currency dto.RequestCurrencyDTO) {
+			if _, err := s.repository.CreateCurrency(mapper.MapRequestToCreate(currency, parsedDate)); err != nil {
+				log.Printf("error create currency: %s", err)
+			}
+		}(currency)
 	}
 
-	return false
+	return true
 }

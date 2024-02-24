@@ -1,7 +1,7 @@
 package http
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -24,9 +24,20 @@ func (h *Handler) createCurrency(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(h.service.Currency.Save(date))
+	result := h.service.Currency.Create(date)
+	data := map[string]bool{"status": result}
+	response, err := json.Marshal(data)
 
-	// TODO: call method from service
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if !result {
+		http.Error(w, string(response), http.StatusBadRequest)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Date: " + date))
+	w.Write(response)
 }

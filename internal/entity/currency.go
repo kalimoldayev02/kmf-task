@@ -1,9 +1,9 @@
-package model
+package entity
 
 import "time"
 
 type Currency struct {
-	Id    uint
+	ID    uint
 	Title string
 	Code  string
 	Value string

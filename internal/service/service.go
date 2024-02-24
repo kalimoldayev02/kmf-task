@@ -5,7 +5,7 @@ import (
 )
 
 type Currency interface {
-	Save(date string) bool
+	Create(date string) bool
 }
 
 type Service struct {
@@ -14,6 +14,6 @@ type Service struct {
 
 func NewService(r *repository.Repository) *Service {
 	return &Service{
-		Currency: NewAuthService(r.Currency),
+		Currency: newCurrencyService(r.Currency),
 	}
 }

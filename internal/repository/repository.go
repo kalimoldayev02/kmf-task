@@ -1,12 +1,17 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/kalimoldayev02/kmf-task/internal/dto"
+)
 
 const (
-	currencyTable = "r_currency"
+	currencyTable = "currency"
 )
 
 type Currency interface {
+	CreateCurrency(currency dto.CreateCurrencDTO) (uint, error)
 }
 
 type Repository struct {
@@ -15,6 +20,6 @@ type Repository struct {
 
 func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
-		Currency: NewCurrencyRepository(db),
+		Currency: newCurrencyRepository(db),
 	}
 }
