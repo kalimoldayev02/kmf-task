@@ -56,12 +56,12 @@ func (h *Handler) getCurrencyByDate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data interface{}
+	var currencies interface{}
 	var err error
 	if code, isExist := vars["code"]; isExist {
-		data, err = h.service.Currency.GetByDateAndCode(date, code)
+		currencies, err = h.service.Currency.GetByDateAndCode(date, code)
 	} else {
-		data, err = h.service.Currency.GetByDate(date)
+		currencies, err = h.service.Currency.GetByDate(date)
 	}
 
 	if err != nil {
@@ -69,13 +69,16 @@ func (h *Handler) getCurrencyByDate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := json.Marshal(data)
+	response := make(map[string]interface{})
+	response["status"] = "ok"
+	response["data"] = currencies
 
+	responseJson, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(response)
+	w.Write(responseJson)
 }

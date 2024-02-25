@@ -21,6 +21,6 @@ func MapEntityToResponse(entity entity.Currency) dto.ResponseCurrencyDTO {
 		ID:    entity.ID,
 		Code:  entity.Code,
 		Value: entity.Value,
-		Date:  entity.Date.Format("15.09.2013"),
+		Date:  entity.Date.Format("02.01.2006"),
 	}
 }

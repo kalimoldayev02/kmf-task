@@ -9,6 +9,7 @@ import (
 
 const (
 	currencyTable = "currency"
+	dateLayout    = "02-01-2006"
 )
 
 type Currency interface {
