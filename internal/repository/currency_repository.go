@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/kalimoldayev02/kmf-task/internal/dto"
@@ -72,6 +73,42 @@ func (r *CurrencyRepository) GetByDate(date string) ([]entity.Currency, error) {
 }
 
 func (r *CurrencyRepository) GetByDateAndCode(date string, code string) ([]entity.Currency, error) {
+	parsedDate, err := time.Parse(dateLayout, date)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	var currencies []entity.Currency
+	query := fmt.Sprintf("SELECT id, code, value, TO_CHAR(date, 'DD.MM.YYYY') FROM %s WHERE TO_CHAR(date, 'DD-MM-YYYY') = $1 AND UPPER(code) = $2 ORDER BY id DESC", currencyTable)
+
+	rows, err := r.db.Query(query, parsedDate.Format(dateLayout), strings.ToUpper(code))
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var currency entity.Currency
+		var tmpDate string
+
+		err := rows.Scan(&currency.ID, &currency.Code, &currency.Value, &tmpDate)
+
+		if err != nil {
+			return nil, err
+		}
+
+		currency.Date, err = time.Parse("02.01.2006", tmpDate)
+		if err != nil {
+			return nil, err
+		}
+
+		currencies = append(currencies, currency)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return currencies, nil
 }

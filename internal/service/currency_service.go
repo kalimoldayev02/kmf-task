@@ -98,6 +98,15 @@ func (s *CurrencyService) GetByDate(date string) ([]dto.ResponseCurrencyDTO, err
 }
 
 func (s *CurrencyService) GetByDateAndCode(date string, code string) ([]dto.ResponseCurrencyDTO, error) {
+	data, err := s.repository.GetByDateAndCode(date, code)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	var reuslt []dto.ResponseCurrencyDTO
+	for i := range data {
+		reuslt = append(reuslt, mapper.MapEntityToResponse(data[i]))
+	}
+
+	return reuslt, nil
 }
